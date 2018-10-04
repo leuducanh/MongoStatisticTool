@@ -1,0 +1,22 @@
+spring:
+  main:
+    web-environment: false
+  
+logging:
+  level:
+    org.springframework.web: ERROR
+    vn.com.ntqsolution: DEBUG
+  file: ../statistictool.log
+  
+application:
+  environment:
+    isProduction: false  
+
+  database:
+    mongodb:
+      host: localhost
+      port: 27017
+      connectionsPerHost: 1500
+      user: Nexiv
+      password: "100manUser"
+      authenticationDatabase: admin
