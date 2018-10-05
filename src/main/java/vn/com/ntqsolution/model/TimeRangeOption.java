@@ -1,10 +1,12 @@
 package vn.com.ntqsolution.model;
 
 import lombok.Getter;
+import vn.com.ntqsolution.constant.Constant;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 @Getter
 public class TimeRangeOption {
@@ -32,7 +34,9 @@ public class TimeRangeOption {
     }
 
     public static long parse(String dateString) {
+        TimeZone timeZone = TimeZone.getTimeZone(Constant.TIME_ZONE);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        sdf.setTimeZone(timeZone);
         Date date = null;
         try {
             date = sdf.parse(dateString);
