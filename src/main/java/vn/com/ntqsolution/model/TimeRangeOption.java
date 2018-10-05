@@ -29,8 +29,6 @@ public class TimeRangeOption {
             timeRange += " " + endDate;
         }
         timeRange = timeRange.replaceAll("\\:"," ");
-        this.startDate = 1502091600133l;
-        this.endDate = 1502092000339l;
     }
 
     public static long parse(String dateString) {

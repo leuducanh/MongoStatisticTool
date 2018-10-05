@@ -30,13 +30,16 @@ public class StfDAO {
 //        String map = "function() {if ( this.start >= " + timeRangeOption.getStartDate() + " && this.start <= " + timeRangeOption.getEndDate() +") " + "emit(this.api, {count: 1}); "
 //                + "else " + "emit(this.api, {count: 0});}";
 
-        BasicDBObject objGt = new BasicDBObject();
-        BasicDBObject objLt = new BasicDBObject();
-        objGt.append("$gte", timeRangeOption.getStartDate());
-        objLt.append("$lte", timeRangeOption.getEndDate());
+        Document rangeCondition = new Document();
+        if(timeRangeOption.getStartDate() != null) {
+            rangeCondition.append("$gte",timeRangeOption.getStartDate());
+        }
+        if(timeRangeOption.getEndDate() != null){
+            rangeCondition.append("$lte",timeRangeOption.getEndDate());
+        }
+
         List<Document> apiDocWithinTime = coll.aggregate(Arrays.asList(
-                new Document("$match", new Document("start", new Document().append("$gte",timeRangeOption.getStartDate())
-                                                                            .append("$lte",timeRangeOption.getEndDate()))),
+                new Document("$match", new Document("start", rangeCondition)),
                 new Document("$group", new Document().append("_id","$api")
                                                         .append("count",new Document("$sum",1))),
                 new Document("$sort", new Document().append("count",sortOption))
