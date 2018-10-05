@@ -27,8 +27,8 @@ public class MongoDbStatisticApplication {
 
         MongoProcessor mongoProcessor = new MongoProcessor();
 
-        mongoProcessor.statisticApiRequestToStf(new TimeRangeOption(args[0] + " " + args[1],args[2] + " " + args[3]), Constant.DES);
-        System.out.println( "Start date: " + args[0] + " at: " + args[1] + " - End date: " + args[2] + " at: " + args[3] + " " + Constant.TIME_ZONE);
+        mongoProcessor.statisticApiRequestToStf(new TimeRangeOption(Long.parseLong(args[0]),Long.parseLong(args[1])), Constant.DES);
+        System.out.println( "Start milisecond: " + args[0] + " - End milisecond: " + args[1]);
     }
     // DATE FORMAT: "dd-M-yyyy hh:mm:ss" Example: "22-01-2015 10:20:56";
 }

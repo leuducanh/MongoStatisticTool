@@ -18,31 +18,17 @@ public class TimeRangeOption {
     public TimeRangeOption() {
     }
 
-    public TimeRangeOption(String startDate, String endDate) {
+    public TimeRangeOption(Long startDate, Long endDate) {
         this.timeRange = "";
         this.startDate = null;
         this.endDate = null;
-        if (startDate != null && !startDate.isEmpty()) {
-            this.startDate = parse(startDate);
+        if (startDate != null) {
+            this.startDate = startDate;
             timeRange += startDate;
         }
-        if (endDate != null && !endDate.isEmpty()) {
-            this.endDate = parse(endDate);
+        if (endDate != null) {
+            this.endDate = endDate;
             timeRange += " " + endDate;
         }
-        timeRange = timeRange.replaceAll("\\:"," ");
-    }
-
-    public static long parse(String dateString) {
-        TimeZone timeZone = TimeZone.getTimeZone(Constant.TIME_ZONE);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-        sdf.setTimeZone(timeZone);
-        Date date = null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date.getTime();
     }
 }
