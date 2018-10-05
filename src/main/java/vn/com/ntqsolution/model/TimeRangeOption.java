@@ -1,6 +1,5 @@
 package vn.com.ntqsolution.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.text.ParseException;
@@ -27,8 +26,11 @@ public class TimeRangeOption {
         }
         if (endDate != null && !endDate.isEmpty()) {
             this.endDate = parse(endDate);
-            timeRange += endDate;
+            timeRange += " " + endDate;
         }
+        timeRange = timeRange.replaceAll("\\:"," ");
+        this.startDate = 1502091600133l;
+        this.endDate = 1502092000339l;
     }
 
     public static long parse(String dateString) {

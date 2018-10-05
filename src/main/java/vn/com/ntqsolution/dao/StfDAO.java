@@ -1,21 +1,17 @@
 package vn.com.ntqsolution.dao;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
-import org.springframework.stereotype.Component;
 import vn.com.ntqsolution.MongoDBManager;
 import vn.com.ntqsolution.constant.Constant;
 import vn.com.ntqsolution.model.Result;
 import vn.com.ntqsolution.model.TimeRangeOption;
-import vn.com.ntqsolution.util.FileIOHelper;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
 public class StfDAO {
 
     private static MongoCollection<Document> coll;
@@ -29,7 +25,7 @@ public class StfDAO {
         coll.insertOne(obj);
     }
 
-    public List<Result> filterWith(TimeRangeOption timeRangeOption){
+    public List<Result> filterWith(TimeRangeOption timeRangeOption,int sortOption){
 
 //        String map = "function() {if ( this.start >= " + timeRangeOption.getStartDate() + " && this.start <= " + timeRangeOption.getEndDate() +") " + "emit(this.api, {count: 1}); "
 //                + "else " + "emit(this.api, {count: 0});}";
@@ -42,7 +38,8 @@ public class StfDAO {
                 new Document("$match", new Document("start", new Document().append("$gte",timeRangeOption.getStartDate())
                                                                             .append("$lte",timeRangeOption.getEndDate()))),
                 new Document("$group", new Document().append("_id","$api")
-                                                        .append("count",new Document("$sum",1)))
+                                                        .append("count",new Document("$sum",1))),
+                new Document("$sort", new Document().append("count",sortOption))
         )).into(new LinkedList<Document>());
 
         List<Result> results = new LinkedList<>();
