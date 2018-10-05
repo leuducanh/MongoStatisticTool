@@ -10,28 +10,35 @@ import java.util.Date;
 @Getter
 public class TimeRangeOption {
 
-    private long startDate;
-    private long endDate;
+    private Long startDate;
+    private Long endDate;
+    private String timeRange;
 
     public TimeRangeOption() {
     }
 
     public TimeRangeOption(String startDate, String endDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        this.timeRange = "";
+        this.startDate = null;
+        this.endDate = null;
+        if (startDate != null && !startDate.isEmpty()) {
+            this.startDate = parse(startDate);
+            timeRange += startDate;
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            this.endDate = parse(endDate);
+            timeRange += endDate;
+        }
+    }
 
-        startDate = null;
-        endDate = null;
+    public static long parse(String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        Date date = null;
         try {
-            if(startDate != null && !startDate.isEmpty()){
-                Date start = sdf.parse(startDate);
-                this.startDate = start.getTime();
-            }
-            if(endDate != null && !endDate.isEmpty()){
-                Date end = sdf.parse(endDate);
-                this.endDate = end.getTime();
-            }
+            date = sdf.parse(dateString);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return date.getTime();
     }
 }

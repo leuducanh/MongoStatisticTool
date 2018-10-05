@@ -1,17 +1,18 @@
 package vn.com.ntqsolution.dao;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.springframework.stereotype.Component;
 import vn.com.ntqsolution.MongoDBManager;
 import vn.com.ntqsolution.constant.Constant;
-import vn.com.ntqsolution.model.MapreduceResult;
+import vn.com.ntqsolution.model.Result;
 import vn.com.ntqsolution.model.TimeRangeOption;
+import vn.com.ntqsolution.util.FileIOHelper;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -19,15 +20,16 @@ public class StfDAO {
 
     private static MongoCollection<Document> coll;
 
-    static {
-        try {
-            coll = MongoDBManager.getApiLogDb().getCollection(Constant.STF_COLLECTION);
-        } catch (Exception ex) {
-
-        }
+    public StfDAO() {
+        coll = MongoDBManager.getApiLogDb().getCollection(Constant.STF_COLLECTION);
     }
 
-    public void mapreduceWith(TimeRangeOption timeRangeOption){
+    public void insert(String api, long start, long dur){
+        Document obj = new Document().append("api",api).append("start",start).append("duration",dur);
+        coll.insertOne(obj);
+    }
+
+    public List<Result> filterWith(TimeRangeOption timeRangeOption){
 
 //        String map = "function() {if ( this.start >= " + timeRangeOption.getStartDate() + " && this.start <= " + timeRangeOption.getEndDate() +") " + "emit(this.api, {count: 1}); "
 //                + "else " + "emit(this.api, {count: 0});}";
@@ -36,15 +38,20 @@ public class StfDAO {
         BasicDBObject objLt = new BasicDBObject();
         objGt.append("$gte", timeRangeOption.getStartDate());
         objLt.append("$lte", timeRangeOption.getEndDate());
-        AggregateIterable<Document> apiDocWithinTime = coll.aggregate(Arrays.asList(
+        List<Document> apiDocWithinTime = coll.aggregate(Arrays.asList(
                 new Document("$match", new Document("start", new Document().append("$gte",timeRangeOption.getStartDate())
                                                                             .append("$lte",timeRangeOption.getEndDate()))),
                 new Document("$group", new Document().append("_id","$api")
                                                         .append("count",new Document("$sum",1)))
-        ));
+        )).into(new LinkedList<Document>());
 
+        List<Result> results = new LinkedList<>();
         for(Document doc : apiDocWithinTime){
-            System.out.println(doc);
+            Result result = new Result();
+            result.apiName = (String) doc.get("_id");
+            result.requestCount = (Integer) doc.get("count");
+            results.add(result);
         }
+        return results;
     }
 }

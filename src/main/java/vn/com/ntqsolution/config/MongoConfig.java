@@ -1,28 +1,27 @@
 package vn.com.ntqsolution.config;
 
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-@Getter
-@Configuration
 public class MongoConfig {
 
-    @Value("${application.database.mongodb.host}")
-    private String host;
+    public static String host = "localhost";
 
-    @Value("${application.database.mongodb.port}")
-    private Integer port;
+    public static Integer port = new Integer(27017);
 
-    @Value("${application.database.mongodb.connectionsPerHost}")
-    private Integer connectionsPerHost;
+    public static Integer connectionsPerHost = new Integer(1500);
 
-    @Value("${application.database.mongodb.user}")
-    private String user;
+    public static String user = "Nexiv";
 
-    @Value("${application.database.mongodb.password}")
-    private String password;
+    public static String password = "100manUser";
 
-    @Value("${application.database.mongodb.authenticationDatabase}")
-    private String authenticationDatabase;
+    public static String authenticationDatabase = "admin";
 }
